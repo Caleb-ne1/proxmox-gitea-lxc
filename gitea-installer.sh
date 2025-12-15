@@ -79,8 +79,13 @@ DISK="10G"
 DISK_NUMBER=10
 
 # default IP and Gateway
-DEFAULT_IP="10.0.0.$((100 + VMID))/24"   # Adjust subnet as needed
 DEFAULT_GW=$(ip route show default | awk '/default/ {print $3}')
+
+# subnet detection
+SUBNET=$(echo "$DEFAULT_GW" | cut -d. -f1-3)
+
+DEFAULT_IP="$SUBNET.50/24"
+
 
 IP=$(whiptail --inputbox "Enter IP address (CIDR)" 8 60 "$DEFAULT_IP" 3>&1 1>&2 2>&3)
 GW=$(whiptail --inputbox "Enter Gateway" 8 60 "$DEFAULT_GW" 3>&1 1>&2 2>&3)
